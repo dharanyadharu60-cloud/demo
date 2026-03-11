@@ -1,0 +1,18 @@
+kind: pipeline
+type: docker
+name: default
+
+steps:
+  - name: build-docker-image
+    image: plugins/docker
+    settings:
+      repo: yourdockerhubusername/demo-app
+      tags: latest
+
+  - name: deploy-to-k8s
+    image: bitnami/kubectl
+    environment:
+      KUBECONFIG: /root/.kube/config
+    commands:
+      - kubectl apply -f k8s/deployment.yaml
+      - kubectl apply -f k8s/service.yaml
