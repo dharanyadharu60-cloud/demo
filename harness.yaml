@@ -1,0 +1,32 @@
+pipeline:
+  name: My Kubernetes Pipeline
+  identifier: my_k8s_pipeline
+  projectIdentifier: default_project
+  orgIdentifier: default
+  description: Pipeline to deploy Kubernetes manifests
+  stages:
+    - stage:
+        name: Deploy to Kubernetes
+        identifier: deploy_k8s
+        type: Deployment
+        spec:
+          execution:
+            steps:
+              - step:
+                  type: K8sApply
+                  name: Apply Kubernetes Manifests
+                  identifier: apply_manifests
+                  spec:
+                    manifests:
+                      - manifest:
+                          identifier: k8s_manifests
+                          type: K8sManifest
+                          spec:
+                            store:
+                              type: Git
+                              spec:
+                                connectorRef: github-connector       # Use your GitHub connector name
+                                branch: main                          # Git branch
+                                paths:
+                                  - k8s/                                # Folder containing deployment.yaml and service.yaml
+                            skipResourceVersioning: false
